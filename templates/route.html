@@ -1,0 +1,19 @@
+<h1>Find Route</h1>
+
+<form>
+  From:
+  <select>
+    {% for b in buildings %}
+      <option>{{ b[1] }}</option>
+    {% endfor %}
+  </select>
+
+  To:
+  <select>
+    {% for b in buildings %}
+      <option>{{ b[1] }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<a href="/">Back</a>

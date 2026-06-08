@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map</title>
+
+    <!-- ✅ Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <!-- ✅ Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        #map {
+            height: 400px;
+            margin: 20px;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 250px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #search {
+            padding: 8px;
+            width: 250px;
+            margin: 10px;
+            font-size: 16px;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Buildings</h2>
+
+<!-- 🔍 Search -->
+<input type="text" id="search" placeholder="Search building..." onkeyup="searchBuilding()">
+
+<!-- 🗺️ MAP -->
+<div id="map"></div>
+
+<!-- 📦 Buildings List -->
+<div id="buildingList">
+{% for b in buildings %}
+<div class="card" onclick="focusBuilding({{ b[2] }}, {{ b[3] }}, '{{ b[1] }}')">
+    <h3>{{ b[1] }}</h3>
+    <p>Latitude: {{ b[2] }}</p>
+    <p>Longitude: {{ b[3] }}</p>
+    <p>Type: {{ b[4] }}</p>
+<a href="/delete/{{ b[0] }}" onclick="event.stopPropagation(); return confirm('Are you sure to delete?')">
+        <button class="delete-btn">Delete</button>
+    </a>
+</div>
+{% endfor %}
+</div>
+
+<!-- 📡 Pass data -->
+<script>
+    let buildings = {{ buildings | tojson }};
+</script>
+
+<!-- 🗺️ Map Script -->
+<script>
+    var map = L.map('map').setView([16.2455, 80.5640], 18);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+    
+     var bounds = [
+        [16.2425, 80.5605],  // southwest
+        [16.2485, 80.5685]   // northeast
+      ];
+    map.setMaxBounds(bounds);
+    map.setMinZoom(17);
+
+    buildings.forEach(function(b) {
+        let lat = b[2];
+        let lon = b[3];
+        let name = b[1];
+
+        if(lat && lon){
+            L.marker([lat, lon])
+             .addTo(map)
+             .bindPopup("<b>" + name + "</b>");
+        }
+    });
+</script>
+
+<!-- 🔍 Search Script -->
+<script>
+function searchBuilding() {
+    let input = document.getElementById("search").value.toLowerCase();
+    let cards = document.getElementsByClassName("card");
+
+    for (let i = 0; i < cards.length; i++) {
+        let text = cards[i].innerText.toLowerCase();
+
+        if (text.includes(input)) {
+            cards[i].style.display = "block";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
+
+</script>
+<script>
+    var currentMarker;
+
+    function focusBuilding(lat, lon, name) {
+        map.setView([lat, lon], 18);
+
+        if (currentMarker) {
+            map.removeLayer(currentMarker);
+        }
+
+        currentMarker = L.marker([lat, lon])
+            .addTo(map)
+            .bindPopup("<b>" + name + "</b>")
+            .openPopup();
+    }
+</script>
+</body>
+</html>

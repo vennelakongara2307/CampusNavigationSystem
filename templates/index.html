@@ -1,0 +1,57 @@
+<html>
+<head>
+    <title>Campus Navigation</title>
+
+    <style>
+        body {
+            background-image: url('/static/images/campus.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial;
+            color: white;
+        }
+
+        .overlay {
+            margin-top: 100px;
+            margin-left: 40px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: block;
+            width: 220px;
+            margin: 8px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid white;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="overlay">
+    <h1>Campus Navigation System</h1>
+
+    <a class="btn" href="/map">View Buildings</a>
+    <a class="btn" href="/add_building">Add Buildings</a>
+    <a class="btn" href="/route">Find Route</a>
+    <a class="btn" href="/library">View Library</a>
+    <a class="btn" href="/add_book">Add Book</a>
+    <a class="btn" href="/search_book">Search Book</a>
+</div>
+
+</body>
+</html>
